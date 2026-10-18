@@ -1,6 +1,11 @@
-#include "str.h"
+/**
+ * @file    str.cpp
+ * @brief   Implementation of the str class.
+ */
+#include "str.hpp"
 
-#include "string.h"
+#include <string.h>
+
 
 /******************************
 * str constructors/destructor *
@@ -54,7 +59,7 @@ void str::chopleft(size_t amount){
 }
 
 char* str::tocstring() const{
-    char* newString = (char*)malloc(mSize);
+    char* newString = (char*)malloc(mSize + 1);
     memcpy(newString, mData, mSize);
     newString[mSize] = '\0';
     return newString;
@@ -68,7 +73,7 @@ char& str::operator[](size_t i){
     return mData[i];
 }
 
-bool str::operator==(const str& other){
+bool str::operator==(const str& other) const{
     if(mSize != other.mSize){
         return false;
     }
@@ -80,10 +85,14 @@ bool str::operator==(const str& other){
     return true;
 }
 
-bool str::operator!=(const str& other){
+bool str::operator!=(const str& other) const{
     return !(*this == other);
 }
 
+
+/**********************
+* ostream << overload *
+**********************/
 std::ostream& operator<<(std::ostream& out, const str& print){
     char* tmp = print.tocstring();
     out << tmp;

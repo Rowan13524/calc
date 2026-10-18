@@ -1,5 +1,13 @@
-#include "value.h"
+/**
+ * @file    value.cpp
+ * @brief   Implementation of the value class.
+ */
+#include "value.hpp"
 
+
+/********************************
+* value constructors/destructor *
+********************************/
 value::value(){
 }
 
@@ -10,6 +18,10 @@ mValue(value), mUnit(unit)
 value::~value(){
 }
 
+
+/**********************
+* value class methods *
+**********************/
 void value::add(const value& other){
     if(mUnit != other.mUnit){
         std::cout << "ERROR: units must be the same to allow addition" << std::endl;
@@ -36,6 +48,10 @@ void value::divide(const value& other){
     this->mUnit.divide(other.mUnit);
 }
 
+
+/**********************
+* ostream << overload *
+**********************/
 std::ostream& operator<<(std::ostream& out, const value& print){
     str unit = print.mUnit.asStr();
     out << print.mValue << unit;

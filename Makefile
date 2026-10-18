@@ -5,7 +5,7 @@ SRCDIR = src
 BUILDDIR = build
 
 CXX = clang++
-CXXFLAGS = -Iinc -O0 -g
+CXXFLAGS = -Iinc -Wall -Wextra -O0 -g
 LDFLAGS =
 
 SOURCES = $(wildcard $(SRCDIR)/*.cpp)
@@ -24,6 +24,12 @@ $(BUILDDIR)/$(TARGET): $(OBJECTS)
 
 run: $(BUILDDIR)/$(TARGET)
 	$(BUILDDIR)/$(TARGET)
+
+test: $(BUILDDIR)/$(TARGET)
+	valgrind $(BUILDDIR)/$(TARGET)
+
+docu:
+	doxygen
 
 clean:
 	rm $(BUILDDIR)/*

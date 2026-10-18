@@ -1,9 +1,15 @@
-#include "unit.h"
+/**
+ * @file    unit.cpp
+ * @brief   Implementation of the unit class.
+ */
+#include "unit.hpp"
 
 #include <cstring>
 #include <vector>
 
+/// @brief  Global buffer that holds the strings associated with the units.
 std::vector<str> unitStrings;
+
 
 /*******************************
 * node constructors/destructor *
@@ -76,10 +82,15 @@ unit::unit(str unit){
 }
 
 unit::~unit(){
+    //first nodes are held on the stack
     destroy(mMult.next);
     destroy(mDiv.next);
 }
 
+
+/*********************
+* unit class methods *
+*********************/
 bool unit::operator==(const unit& other) const{
     return this->mMult == other.mMult && this->mDiv == other.mDiv;
 }
@@ -88,10 +99,6 @@ bool unit::operator!=(const unit& other) const{
     return !(*this == other);
 }
 
-
-/*********************
-* unit class methods *
-*********************/
 void unit::multiply(const unit& other){
     const unit::node* po = &other.mMult;
     unit::node* pt = &mMult;
@@ -199,7 +206,9 @@ str unit::asStr() const{
 
     if(mMult.unitID != -1){
         for(const node* ptr = &mMult; ptr != NULL; ptr = ptr->next){
-            snprintf(buffer, 10, "%s", unitStrings[ptr->unitID].tocstring());
+            char* tmp = unitStrings[ptr->unitID].tocstring();
+            snprintf(buffer, 10, "%s", tmp);
+            free(tmp);
             result.append(buffer);
         }
     }
@@ -210,7 +219,9 @@ str unit::asStr() const{
     if(mDiv.unitID != -1){
         result.append("/");
         for(const node* ptr = &mDiv; ptr != NULL; ptr = ptr->next){
-            snprintf(buffer, 10, "%s", unitStrings[ptr->unitID].tocstring());
+            char* tmp = unitStrings[ptr->unitID].tocstring();
+            snprintf(buffer, 10, "%s", tmp);
+            free(tmp);
             result.append(buffer);
         }
     }
@@ -243,5 +254,12 @@ bool isEqual(const unit::node* a, const unit::node* b){
 }
 
 void destroy(unit::node* n){
+    unit::node* pfast = n;
+    unit::node* pslow = n;
+    while(pfast != NULL){
+        pfast = pfast->next;
+        free(pslow);
+        pslow = pfast;
+    }
 }
 

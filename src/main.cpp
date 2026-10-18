@@ -1,15 +1,18 @@
+/**
+ * @file    main.cpp
+ * @brief   Main starting point of the program.
+ */
 #include <iostream>
 
-#include "str.h"
-#include "value.h"
+#include "str.hpp"
+#include "value.hpp"
 
+/**
+ * @brief   Main starting point of this program.
+ */
 int main(int argc, char** argv){
-    str string("hello ");
-    str string2("world");
-
-    string.append(string2);
-    string.append(" =D");
-
+    (void)argc;
+    (void)argv;
     value v1(56.3, str("m"));
     value v2(30, str("s"));
 
@@ -24,8 +27,16 @@ int main(int argc, char** argv){
     a.multiply(c);
     a.divide(v2);
 
-    std::cout << string << std::endl;
     std::cout << v1 << std::endl;
     std::cout << a << std::endl;
+
+    str string("hello ");
+    str string2("world");
+
+    string.append(string2);
+    string.append(" =D");
+
+    std::cout << string << std::endl;
+
     return 0;
 }
