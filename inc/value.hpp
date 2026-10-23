@@ -31,6 +31,12 @@ public:
      */
     value(double value, unit unit);
 
+    /**
+     * @brief   Constructor of the value class with a value and a str.
+     *
+     * @param   value   The initial value of this value.
+     * @param   unit    The initial unit of this value as a str.
+     */
     value(double value, str unit);
 
     /**

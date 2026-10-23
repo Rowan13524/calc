@@ -50,28 +50,20 @@ void list::append(const node* other){
 }
 
 bool list::operator==(const list& other) const{
-    return head == other.head;
+    return isEqual(head, other.head);
 }
 
 bool list::operator!=(const list& other) const{
-    return head != other.head;
+    return !isEqual(head, other.head);
 }
 
 
 /***********************
 * list::node functions *
 ***********************/
-bool operator==(const list::node a, const list::node b){
-    return isEqual(&a, &b);
-}
-
-bool operator!=(const list::node a, const list::node b){
-    return !(a == b);
-}
-
 bool isEqual(const list::node* a, const list::node* b){
     while(nullptr != a && nullptr != b){
-        if(a->unitID != b->unitID){
+        if(a->unitID != b->unitID && a->power != b->power){
             return false;
         }
         a = a->next;

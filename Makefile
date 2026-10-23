@@ -28,7 +28,7 @@ run: $(BUILDDIR)/$(TARGET)
 test: $(BUILDDIR)/$(TARGET)
 	valgrind $(BUILDDIR)/$(TARGET)
 
-docu:
+log:
 	doxygen
 
 clean:
