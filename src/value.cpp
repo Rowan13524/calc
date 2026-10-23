@@ -15,6 +15,10 @@ value::value(double value, unit unit) :
 mValue(value), mUnit(unit)
 {}
 
+value::value(double value, str unit) :
+mValue(value), mUnit(unit)
+{}
+
 value::~value(){
 }
 

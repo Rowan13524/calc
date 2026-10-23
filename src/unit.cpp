@@ -2,6 +2,7 @@
  * @file    unit.cpp
  * @brief   Implementation of the unit class.
  */
+
 #include "unit.hpp"
 
 #include <cstring>
@@ -12,87 +13,56 @@ std::vector<str> unitStrings;
 
 
 /*******************************
-* node constructors/destructor *
+* unit constructors/destructor *
 *******************************/
 unit::unit(){
-    mMult.unitID = -1;
-    mDiv.unitID = -1;
-    mMult.next = NULL;
-    mDiv.next = NULL;
 }
 
 unit::unit(const unit& other){
-    const unit::node* po = &other.mMult;
-    unit::node* pt = &mMult;
-    while(po != NULL){
-        pt->unitID = po->unitID;
-        if(po->next != NULL){
-            pt->next = (node*)malloc(sizeof(node));
-        }
-        else{
-            break;
-        }
-        po = po->next;
-        pt = pt->next;
-    }
-    pt->next = NULL;
-
-    po = &other.mDiv;
-    pt = &mDiv;
-    while(po != NULL){
-        pt->unitID = po->unitID;
-        if(po->next != NULL){
-            pt->next = (node*)malloc(sizeof(node));
-        }
-        else{
-            break;
-        }
-        po = po->next;
-        pt = pt->next;
-    }
-    pt->next = NULL;
+    mMult = other.mMult;
+    mDiv = other.mDiv;
 }
 
 unit::unit(str unit){
-    mMult.unitID = -1;
-    mDiv.unitID = -1;
-    mMult.next = NULL;
-    mDiv.next = NULL;
-    if(unit[0] == '/'){
+    if('/' == unit[0]){
         unit.chopleft(1);
         for(size_t i = 0; i < unitStrings.size(); ++i){
             if(unit == unitStrings[i]){
-                mDiv.unitID = i;
+                list::node result;
+                result.unitID = i; result.power = 1;
+                mDiv.append(&result);
                 return;
             }
         }
-        mDiv.unitID = unitStrings.size();
+        list::node result;
+        result.unitID = unitStrings.size(); result.power = 1;
+        mDiv.append(&result);
         unitStrings.push_back(unit);
     }
     else{
         for(size_t i = 0; i < unitStrings.size(); ++i){
             if(unit == unitStrings[i]){
-                mMult.unitID = i;
+                list::node result;
+                result.unitID = i; result.power = 1;
+                mMult.append(&result);
                 return;
             }
         }
-        mMult.unitID = unitStrings.size();
+        list::node result;
+        result.unitID = unitStrings.size(); result.power = 1;
+        mMult.append(&result);
         unitStrings.push_back(unit);
     }
 }
 
 unit::~unit(){
-    //first nodes are held on the stack
-    destroy(mMult.next);
-    destroy(mDiv.next);
 }
-
 
 /*********************
 * unit class methods *
 *********************/
 bool unit::operator==(const unit& other) const{
-    return this->mMult == other.mMult && this->mDiv == other.mDiv;
+    return mMult == other.mMult && mDiv == other.mDiv;
 }
 
 bool unit::operator!=(const unit& other) const{
@@ -100,102 +70,62 @@ bool unit::operator!=(const unit& other) const{
 }
 
 void unit::multiply(const unit& other){
-    const unit::node* po = &other.mMult;
-    unit::node* pt = &mMult;
-    if(po->unitID != -1){
-        while(pt->next != NULL){
-            pt = pt->next;
-        }
-        if(pt->unitID != -1){
-            pt->next = (node*)malloc(sizeof(node));
-            pt = pt->next;
-        }
-        while(po != NULL){
-            pt->unitID = po->unitID;
-            if(po->next != NULL){
-                pt->next = (node*)malloc(sizeof(node));
-            }
-            else{
+    bool addedPower = false;
+    for(list::node* n = other.mMult.head; nullptr != n; n = n->next){
+        for(list::node* m = mMult.head; nullptr != m; m = m->next){
+            if(n->unitID == m->unitID){
+                m->power += n->power;
+                addedPower = true;
                 break;
             }
-            po = po->next;
-            pt = pt->next;
         }
-        pt->next = NULL;
+        if(!addedPower){
+            addedPower = false;
+            mMult.append(n);
+        }
     }
-
-    po = &other.mDiv;
-    pt = &mDiv;
-    if(po->unitID != -1){
-        while(pt->next != NULL){
-            pt = pt->next;
-        }
-        if(pt->unitID != -1){
-            pt->next = (node*)malloc(sizeof(node));
-            pt = pt->next;
-        }
-        while(po != NULL){
-            pt->unitID = po->unitID;
-            if(po->next != NULL){
-                pt->next = (node*)malloc(sizeof(node));
-            }
-            else{
+    for(list::node* n = other.mDiv.head; nullptr != n; n = n->next){
+        for(list::node* m = mDiv.head; nullptr != m; m = m->next){
+            if(n->unitID == m->unitID){
+                m->power += n->power;
+                addedPower = true;
                 break;
             }
-            po = po->next;
-            pt = pt->next;
         }
-        pt->next = NULL;
+        if(!addedPower){
+            addedPower = false;
+            mDiv.append(n);
+        }
     }
 }
 
 void unit::divide(const unit& other){
-    const unit::node* po = &other.mMult;
-    unit::node* pt = &mDiv;
-    if(po->unitID != -1){
-        while(pt->next != NULL){
-            pt = pt->next;
-        }
-        if(pt->unitID != -1){
-            pt->next = (node*)malloc(sizeof(node));
-            pt = pt->next;
-        }
-        while(po != NULL){
-            pt->unitID = po->unitID;
-            if(po->next != NULL){
-                pt->next = (node*)malloc(sizeof(node));
-            }
-            else{
+    bool addedPower = false;
+    for(list::node* n = other.mMult.head; nullptr != n; n = n->next){
+        for(list::node* m = mDiv.head; nullptr != m; m = m->next){
+            if(n->unitID == m->unitID){
+                m->power += n->power;
+                addedPower = true;
                 break;
             }
-            po = po->next;
-            pt = pt->next;
         }
-        pt->next = NULL;
+        if(!addedPower){
+            addedPower = false;
+            mDiv.append(n);
+        }
     }
-
-    po = &other.mDiv;
-    pt = &mMult;
-    if(po->unitID != -1){
-        while(pt->next != NULL){
-            pt = pt->next;
-        }
-        if(pt->unitID != -1){
-            pt->next = (node*)malloc(sizeof(node));
-            pt = pt->next;
-        }
-        while(po != NULL){
-            pt->unitID = po->unitID;
-            if(po->next != NULL){
-                pt->next = (node*)malloc(sizeof(node));
-            }
-            else{
+    for(list::node* n = other.mDiv.head; nullptr != n; n = n->next){
+        for(list::node* m = mMult.head; nullptr != m; m = m->next){
+            if(n->unitID == m->unitID){
+                m->power += n->power;
+                addedPower = true;
                 break;
             }
-            po = po->next;
-            pt = pt->next;
         }
-        pt->next = NULL;
+        if(!addedPower){
+            addedPower = false;
+            mMult.append(n);
+        }
     }
 }
 
@@ -204,11 +134,11 @@ str unit::asStr() const{
     char buffer[10];
     result.append("[");
 
-    if(mMult.unitID != -1){
-        for(const node* ptr = &mMult; ptr != NULL; ptr = ptr->next){
+    if(nullptr != mMult.head){
+        for(const list::node* ptr = mMult.head; nullptr != ptr; ptr = ptr->next){
             char* tmp = unitStrings[ptr->unitID].tocstring();
-            snprintf(buffer, 10, "%s", tmp);
-            free(tmp);
+            snprintf(buffer, 10, "%s^%d", tmp, ptr->power);
+            delete[] tmp;
             result.append(buffer);
         }
     }
@@ -216,12 +146,12 @@ str unit::asStr() const{
         result.append("1");
     }
 
-    if(mDiv.unitID != -1){
+    if(nullptr != mDiv.head){
         result.append("/");
-        for(const node* ptr = &mDiv; ptr != NULL; ptr = ptr->next){
+        for(const list::node* ptr = mDiv.head; nullptr != ptr; ptr = ptr->next){
             char* tmp = unitStrings[ptr->unitID].tocstring();
-            snprintf(buffer, 10, "%s", tmp);
-            free(tmp);
+            snprintf(buffer, 10, "%s^%d", tmp, ptr->power);
+            delete[] tmp;
             result.append(buffer);
         }
     }
@@ -229,37 +159,3 @@ str unit::asStr() const{
 
     return result;
 }
-
-
-/***********************
-* unit::node functions *
-***********************/
-bool operator==(const unit::node a, const unit::node b){
-    return isEqual(&a, &b);
-}
-
-bool operator!=(const unit::node a, const unit::node b){
-    return !(a == b);
-}
-
-bool isEqual(const unit::node* a, const unit::node* b){
-    while(a != NULL && b != NULL){
-        if(a->unitID != b->unitID){
-            return false;
-        }
-        a = a->next;
-        b = b->next;
-    }
-    return true;
-}
-
-void destroy(unit::node* n){
-    unit::node* pfast = n;
-    unit::node* pslow = n;
-    while(pfast != NULL){
-        pfast = pfast->next;
-        free(pslow);
-        pslow = pfast;
-    }
-}
-

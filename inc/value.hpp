@@ -4,8 +4,8 @@
  *          This class uses an internal linked list node structure.
  */
 
-#ifndef VALUE_H
-#define VALUE_H
+#ifndef VALUE_HPP
+#define VALUE_HPP
 
 #include <iostream>
 #include <stdlib.h>
@@ -30,6 +30,8 @@ public:
      * @param   unit    The initial unit of this value.
      */
     value(double value, unit unit);
+
+    value(double value, str unit);
 
     /**
      * @brief   Destructor of the value class.
@@ -74,8 +76,11 @@ public:
      */
     friend std::ostream& operator<<(std::ostream& out, const value& print);
 private:
+    /// @brief  Numerical value of this value.
     double mValue;
+    /// @brief  Unit of this value.
     unit mUnit;
 };
 
 #endif
+

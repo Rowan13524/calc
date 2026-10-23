@@ -4,12 +4,13 @@
  *          This class uses an internal linked list node structure.
  */
 
-#ifndef UNIT_H
-#define UNIT_H
-
-#include "str.hpp"
+#ifndef UNIT_HPP
+#define UNIT_HPP
 
 #include <stdlib.h>
+
+#include "str.hpp"
+#include "list.hpp"
 
 /**
  * @class   unit
@@ -19,18 +20,6 @@
  */
 class unit{
 public:
-    /**
-     * @struct  node
-     * @brief   A singly linked list node to store the unitIDs of this unit.
-     *          The actual units are stored in an external buffer.
-     */
-    struct node{
-        /// @brief  The id of the unit.
-        int64_t unitID;
-        /// @brief  The next node in the linked list.
-        node* next;
-    };
-
     /**
      * @brief   Default constructor of the unit class.
      */
@@ -96,52 +85,12 @@ public:
      * @return  The string representation of this unit in a str.
      */
     str asStr() const;
-
-    /**
-     * @brief   A check for equallity of two nodes and their following nodes are identical.
-     *
-     * @param   a   First operand.
-     * @param   b   Second operand.
-     *
-     * @return  True if they are equal, false if they are not.
-     */
-    friend bool operator==(const node a, const node b);
-
-    /**
-     * @brief   A check for inequallity of two nodes and their following nodes are identical.
-     *
-     * @param   a   First operand.
-     * @param   b   Second operand.
-     *
-     * @return  True if they are equal, false if they are not.
-     */
-    friend bool operator!=(const node a, const node b);
-
-    /**
-     * @brief   Helper function that compares the values of the nodes and their following nodes.
-     *
-     * This function interates over both nodes like a list, and compares the values of each node in that list.
-     *
-     * @param   a   First operand.
-     * @param   b   Second operand.
-     *
-     * @return  True if they are equal, false if they are not.
-     */
-    friend bool isEqual(const node* a, const node* b);
-
-    /**
-     * @brief   Manual destructor of a node and its following nodes.
-     *
-     * Iterates over a node like a list, and frees every node on the way.
-     *
-     * @param   n   The node to be destroyed with its following nodes.
-     */
-    friend void destroy(node* n);
 private:
     /// @brief  Top part of a fractional unit.
-    node mMult;
+    list mMult;
     /// @brief  Bottom part of a fractional unit.
-    node mDiv;
+    list mDiv;
 };
 
 #endif
+

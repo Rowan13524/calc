@@ -3,8 +3,8 @@
  * @brief   Definition of the str class.
  */
 
-#ifndef STR_H
-#define STR_H
+#ifndef STR_HPP
+#define STR_HPP
 
 #include <iostream>
 
@@ -107,8 +107,11 @@ public:
      */
     friend std::ostream& operator<<(std::ostream& out, const str& print);
 private:
+    /// @brief  The size of the string in bytes.
     size_t mSize;
+    /// @brief  Pointer to the heap data of the str.
     char* mData;
 };
 
 #endif
+
